@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: liberty-app 
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: liberty-app
+    spec:
+      containers:
+      - name: liberty-app
+        image: liberty:1
+        # for local development against minikube registry
+        imagePullPolicy: Never        
+        ports:
+        - containerPort: 9080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: liberty-service
+  labels:
+    app: liberty-service
+spec:
+  type: NodePort
+  ports:
+    # the port that this service should serve on
+    - port: 9080
+  # label keys and values that must match in order to receive traffic for this service
+  selector:
+    app: liberty-app
